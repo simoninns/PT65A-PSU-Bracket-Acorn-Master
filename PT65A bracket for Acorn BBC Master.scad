@@ -58,7 +58,7 @@ difference() {
     // Draw the base plate (same dimensions as the original PSU)
     cube([basePlate_width, 30, basePlate_thickness]);
     
-    // 4 Screw holes for attaching the base plate to the case of the original PSU
+    // 2 Screw holes for attaching the base plate to the case of the original PSU
     // Mounting screw hole 1 (4mm diameter) - case
     translate([(basePlate_width - basePlate_screwDistanceWidth) / 2,
         (basePlate_length - basePlate_screwDistanceLength) / 2, 0]) 
@@ -73,7 +73,7 @@ difference() {
         cylinder(h = basePlate_thickness, r = basePlate_screwHoleRadius);
     }
     
-    // 4 Screw holes for mounting the PT65A to the base plate
+    // 2 Screw holes for mounting the PT65A to the base plate
     translate([(basePlate_width - pt65a_width) / 2,
         (basePlate_length - pt65a_length) / 2, 0]) {
         // Mounting screw hole 1 (4mm diameter) - PT65A
@@ -101,7 +101,7 @@ difference() {
     }
 }
 
-// 4 standoffs for mounting the PT65A to the base plate
+// 2 standoffs for mounting the PT65A to the base plate
 translate([(basePlate_width - pt65a_width) / 2,
     (basePlate_length - pt65a_length) / 2, 0]) {
     // Standoff 1
