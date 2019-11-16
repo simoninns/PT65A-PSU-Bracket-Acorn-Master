@@ -54,9 +54,57 @@ pt65a_standoffRadius = 6 / 2;
 // PT65A standoffs are 3mm high
 pt65a_standoffHeight = 3;
 
+// Module to draw a rounded rectange style cube
+module roundedCube(length, width, height, radius) {
+    // Range check the radius to make sure it is in bounds of the shape
+    radius = (radius > width) ? width : radius;
+    radius = (radius > height) ? height : radius;
+    
+    translate([0, 0, height / 2]) {
+        hull() {
+            translate([length - radius, width - radius, 0]) {
+                cylinder(r = radius, h = height, center= true);
+            }
+            
+            translate([length - radius, radius, 0]) {
+                cylinder(r = radius, h = height, center= true);
+            }
+            
+            translate([radius, width - radius, 0]) {
+                cylinder(r = radius, h = height, center= true);
+            }
+            
+            translate([radius, radius, 0]) {
+                cylinder(r = radius, h = height, center= true);
+            }
+        }
+    }
+}
+
+// Main function
 difference() {
-    // Draw the base plate (same dimensions as the original PSU)
-    cube([basePlate_width, 30, basePlate_thickness]);
+    union() {
+        // Draw the base plate (same dimensions as the original PSU)
+        roundedCube(basePlate_width, 26, basePlate_thickness, 2);
+        
+        // 2 standoffs for mounting the PT65A to the base plate
+        translate([(basePlate_width - pt65a_width) / 2,
+            (basePlate_length - pt65a_length) / 2, 0]) {
+            // Standoff 1
+            translate([(pt65a_width - pt65a_screwDistanceWidth) / 2,
+                (pt65a_length - pt65a_screwDistanceLength) / 2, 0]) 
+            {
+                cylinder(h = basePlate_thickness, r = pt65a_screwHoleRadius + 8);
+            }
+            
+            // Standoff 2
+            translate([pt65a_width - ((pt65a_width - pt65a_screwDistanceWidth) / 2),
+                (pt65a_length - pt65a_screwDistanceLength) / 2, 0]) 
+            {
+                cylinder(h = basePlate_thickness, r = pt65a_screwHoleRadius + 8);
+            }
+        }
+    }
     
     // 2 Screw holes for attaching the base plate to the case of the original PSU
     // Mounting screw hole 1 (4mm diameter) - case
@@ -92,24 +140,33 @@ difference() {
     }
 
     // Cut outs for clearance and to save some plastic
-    translate([10, 0, 0]) {
-    cube([(basePlate_width - 20), 10, basePlate_thickness]);
+    translate([10, -10, 0]) {
+        roundedCube((basePlate_width - 20), 20, basePlate_thickness, 2);
     }
     
     translate([20, 30-10, 0]) {
-    cube([(basePlate_width - 40), 10, basePlate_thickness]);
+        roundedCube((basePlate_width - 40), 10, basePlate_thickness, 2);
+    }
+    
+    // Emboss some text
+    translate([basePlate_width / 2, 15, basePlate_thickness - 0.5]) {
+        linear_extrude(height = 0.5) {
+            text("www.waitingforfriday.com", font = "Liberation Sans", size = 3, valign = "center", halign = "center");
+        }
     }
 }
 
 // 2 standoffs for mounting the PT65A to the base plate
 translate([(basePlate_width - pt65a_width) / 2,
     (basePlate_length - pt65a_length) / 2, 0]) {
+        
     // Standoff 1
     translate([(pt65a_width - pt65a_screwDistanceWidth) / 2,
         (pt65a_length - pt65a_screwDistanceLength) / 2, 0]) 
     {
         difference() {
-            cylinder(h = pt65a_standoffHeight + basePlate_thickness, r = pt65a_standoffRadius);
+            cylinder(h = pt65a_standoffHeight + basePlate_thickness, r1 = pt65a_standoffRadius + 2,
+                r2 = pt65a_standoffRadius);
             cylinder(h = pt65a_standoffHeight + basePlate_thickness, r = pt65a_screwHoleRadius);
         }
     }
@@ -119,7 +176,8 @@ translate([(basePlate_width - pt65a_width) / 2,
         (pt65a_length - pt65a_screwDistanceLength) / 2, 0]) 
     {
         difference() {
-            cylinder(h = pt65a_standoffHeight + basePlate_thickness, r = pt65a_standoffRadius);
+            cylinder(h = pt65a_standoffHeight + basePlate_thickness, r1 = pt65a_standoffRadius + 2,
+                r2 = pt65a_standoffRadius);
             cylinder(h = pt65a_standoffHeight + basePlate_thickness, r = pt65a_screwHoleRadius);
         }
     }
