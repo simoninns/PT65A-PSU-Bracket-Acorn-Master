@@ -59,7 +59,7 @@ pt65a_standoffHeight = 3;
 
 // Text to include on the bracket
 bracket_text = "www.waitingforfriday.com";
-bracket_textSize = 3;
+bracket_textSize = 4;
 
 // Module to draw a rounded rectange style cube
 module roundedCube(length, width, height, radius) {
